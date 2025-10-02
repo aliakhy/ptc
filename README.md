@@ -1,1 +1,1 @@
-Code is formatted with Black for clean and consistent style.
+Code is formatted with Black for clean style.
