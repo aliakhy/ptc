@@ -1,6 +1,6 @@
 Code is formatted with Black for clean style.
 
-1-create env
+1-python -m ven env
 
 2-pip install -r requirements.txt
 
