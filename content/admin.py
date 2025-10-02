@@ -3,9 +3,10 @@ from .models import *
 # Register your models here.
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('id','title', 'slug', 'created_at')
-    list_filter = ('created_at',)
+    list_display = ('id','title', 'slug','is_show' ,'created_at')
+    list_filter = ('created_at','is_show')
     search_fields = ('title',)
+    list_editable = ('is_show',)
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -26,9 +27,8 @@ class GalleryInline(admin.TabularInline):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'slug', 'category','created_at','is_show')
-    list_editable = ('is_show',)
-    list_filter = ('is_show','category','created_at')
+    list_display = ('id', 'title', 'slug', 'category','created_at')
+    list_filter = ('category','created_at')
     search_fields = ('title',)
     inlines = [GalleryInline]
 

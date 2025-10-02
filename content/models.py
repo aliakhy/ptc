@@ -8,6 +8,7 @@ class Blog(models.Model):
     description = models.TextField()
     summary = models.CharField(max_length=100)
     body=RichTextUploadingField()
+    is_show = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -39,7 +40,6 @@ class Project(models.Model):
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
     dimensions = models.CharField(max_length=30)
     creation_year = models.CharField(max_length=4,validators=[is_digit])
-    is_show = models.BooleanField(default=False)
     scale=models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -55,7 +55,7 @@ class Category(models.Model):
 
 
 class Gallery(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,related_name='gallery')
     image = models.ImageField(upload_to='project_gallery')
 
     def __str__(self):
