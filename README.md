@@ -8,4 +8,6 @@ Code is formatted with Black for clean style.
 
 4-python manage.py migrate
 
-5 you are green to go 
+5-create a madia folder
+
+6-you are green to go 
