@@ -1,9 +1,13 @@
+from rest_framework import permissions
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from django.utils import translation
 from unicodedata import lookup
 from .serializers import *
 from content.models import Project, Blog
+from celery import Celery
+
 
 
 class ProjectView(ListModelMixin, RetrieveModelMixin, GenericAPIView):
@@ -38,10 +42,25 @@ class BlogViewSet(ReadOnlyModelViewSet):
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
 
+    def get_serializer_class(self):
+        if self.request.method in ["POST", "PUT", "PATCH"]:
+            return CommentWriteSerializer
+        return CommentSerializer
+
     def get_queryset(self):
         return Comment.objects.filter(
-            blog__slug=self.kwargs["blog_slug"], status="Published"
+            blog__slug=self.kwargs["blog_slug"], status="published"
         )
+
+    def get_permissions(self):
+        if self.request.method in [permissions.SAFE_METHODS, "POST"]:
+            return [permissions.AllowAny()]
+        return [permissions.IsAdminUser()]
+
+    def perform_create(self, serializer):
+        lang = translation.get_language()
+        blog = Blog.objects.get(slug=self.kwargs["blog_slug"])
+        serializer.save(language=lang, blog=blog)
 
 
 class ApplyView(CreateAPIView):

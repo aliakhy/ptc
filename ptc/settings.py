@@ -158,3 +158,7 @@ USE_L10N = True
 LOCALE_PATHS = [
     BASE_DIR / "locale",
 ]
+
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"

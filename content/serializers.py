@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from django.utils import translation
 from .models import *
 
 
@@ -56,14 +56,37 @@ class BlogListSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    text_translate = serializers.SerializerMethodField(method_name="get_text")
+
     class Meta:
         model = Comment
-        fields = ["id", "text", "parent", "updated_at"]
+        fields = ["id", "text_translate", "parent", "updated_at"]
+
+    def get_text(self, obj):
+        lang = translation.get_language()
+        if lang == "fa":
+            return obj.text_fa
+        elif lang == "ar":
+            return obj.text_ar
+        return obj.text_en
 
     def validate_parent(self, value):
         if value and value.status != "Published":
             raise serializers.ValidationError("Parent comment must be Published.")
         return value
+
+
+class CommentWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ["text_en", "text_fa", "text_ar", "parent"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        lang = translation.get_language()
+        for i in ["en", "fa", "ar"]:
+            if i != lang:
+                self.fields.pop(f"text_{i}", None)
 
 
 #     -------->aplly

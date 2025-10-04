@@ -1,7 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from .validators import *
-
+from .tasks import translatetask
 
 # blog
 class Blog(models.Model):
@@ -23,14 +23,30 @@ class Comment(models.Model):
         ("draft", "Draft"),
         ("published", "Published"),
     ]
-    text = models.CharField(max_length=200)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     parent = models.ForeignKey(
         "self", on_delete=models.DO_NOTHING, null=True, blank=True
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default="published"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    LANGUAGE_CHOICES = [
+        ("en", "English"),
+        ("fa", "Farsi"),
+        ("ar", "Arabic"),
+    ]
+    text_fa = models.CharField(max_length=200, blank=True)
+    text_en = models.CharField(max_length=200, blank=True)
+    text_ar = models.CharField(max_length=200, blank=True)
+
+    language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
+
+    def save(self, *args, **kwargs):
+
+        super().save(*args, **kwargs)
+        translatetask.delay(self.pk)
 
     def __str__(self):
         return f"id={self.pk}"
