@@ -103,7 +103,7 @@ class Apply(models.Model):
     education_degree = models.CharField(max_length=100)
     study_field = models.CharField(max_length=100)
     education_level = models.CharField(max_length=100)
-    resume = models.FileField(validators=[apply_resume_validate])
+    resume = models.FileField(validators=[apply_resume_validate], upload_to="resumes")
     cover_letter = models.CharField(max_length=100)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)

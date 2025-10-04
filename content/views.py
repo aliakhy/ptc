@@ -34,13 +34,6 @@ class BlogViewSet(ReadOnlyModelViewSet):
             return BlogDetailSerializer
         return BlogListSerializer
 
-    # lookup_field = 'slug'
-    #
-    # def get(self, request, slug=None):
-    #     if slug:
-    #         return self.retrieve(request, slug=slug)
-    #     return self.list(request)
-
 
 class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer

@@ -1,8 +1,7 @@
-from django.db.models.signals import pre_save
 from django.dispatch import receiver
 import os
-from django.db.models.signals import post_delete
-from .models import Project, Gallery
+from django.db.models.signals import post_delete, pre_save
+from .models import Apply, Gallery
 
 
 @receiver(pre_save, sender=Gallery)
@@ -25,10 +24,19 @@ def del_old_image(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Gallery)
 def delete_image_on_delete(sender, instance, **kwargs):
-
     image = getattr(instance, "image")
     if image:
         try:
             os.remove(image.path)
+        except:
+            pass
+
+
+@receiver(post_delete, sender=Apply)
+def delete_resume_on_delete(sender, instance, **kwargs):
+    resume = getattr(instance, "resume")
+    if resume:
+        try:
+            os.remove(resume.path)
         except:
             pass
