@@ -3,6 +3,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from .validators import *
 from .tasks import translatetask
 
+
 # blog
 class Blog(models.Model):
     title = models.CharField(max_length=70)

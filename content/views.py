@@ -9,7 +9,6 @@ from content.models import Project, Blog
 from celery import Celery
 
 
-
 class ProjectView(ListModelMixin, RetrieveModelMixin, GenericAPIView):
     queryset = (
         Project.objects.select_related("category").prefetch_related("gallery").all()

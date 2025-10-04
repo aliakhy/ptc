@@ -1,5 +1,7 @@
 from celery import shared_task
 from deep_translator import GoogleTranslator
+
+
 @shared_task
 def translatetask(comment_id):
     from .models import Comment
