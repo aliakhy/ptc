@@ -4,10 +4,18 @@ Code is formatted with Black for clean style.
 
 2-pip install -r requirements.txt
 
-3-python manage.py makemigrations
+3- install https://github.com/tporadowski/redis/releases 
 
-4-python manage.py migrate
+4-open the redis-server.exe
 
-5-create a madia folder
+5-python manage.py makemigrations
 
-6-you are green to go 
+6-python manage.py migrate
+
+7-create a madia folder
+
+8-celery -A ptc worker -l info -P sol
+
+9-python manage.py runserver
+
+10-you are green to go 
