@@ -8,9 +8,9 @@ from .tasks import translatetask
 class Blog(models.Model):
     title = models.CharField(max_length=70)
     slug = models.SlugField(max_length=70, unique=True)
-    description = models.TextField()
-    summary = models.CharField(max_length=100)
-    body = RichTextUploadingField()
+    description = models.TextField(blank=True)
+    summary = models.CharField(max_length=100, blank=True)
+    body = RichTextUploadingField(blank=True)
     is_show = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -32,7 +32,6 @@ class Comment(models.Model):
         max_length=20, choices=STATUS_CHOICES, default="published"
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     LANGUAGE_CHOICES = [
         ("en", "English"),
         ("fa", "Farsi"),
@@ -57,13 +56,13 @@ class Comment(models.Model):
 class Project(models.Model):
     title = models.CharField(max_length=70)
     slug = models.SlugField(max_length=70, unique=True)
-    description = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
     category = models.ForeignKey(
         "Category", on_delete=models.SET_NULL, null=True, blank=True
     )
-    dimensions = models.CharField(max_length=30)
-    creation_year = models.CharField(max_length=4, validators=[is_digit])
-    scale = models.PositiveIntegerField()
+    dimensions = models.CharField(max_length=30, blank=True)
+    creation_year = models.CharField(max_length=4, validators=[is_digit], blank=True)
+    scale = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -90,7 +89,7 @@ class Gallery(models.Model):
 class Contact(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(max_length=200)
     phone_number = models.CharField(max_length=11, validators=[is_digit])
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,7 +98,7 @@ class Contact(models.Model):
 class Order(models.Model):
     company_name = models.CharField(max_length=100)
     activity_area = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(max_length=200)
     contact_number = models.CharField(max_length=11, validators=[is_digit])
     explanation = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -115,7 +114,7 @@ class Apply(models.Model):
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(max_length=200)
     phone_number = models.CharField(max_length=11, validators=[is_digit])
     education_degree = models.CharField(max_length=100)
     study_field = models.CharField(max_length=100)

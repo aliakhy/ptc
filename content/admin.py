@@ -15,7 +15,7 @@ class BlogAdmin(TranslationAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("id", "blog__title", "created_at", "updated_at")
+    list_display = ("id", "blog__title", "created_at")
     search_fields = ("blog__title",)
 
 

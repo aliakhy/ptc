@@ -60,7 +60,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ["id", "text_translate", "parent", "updated_at"]
+        fields = ["id", "text_translate", "parent"]
 
     def get_text(self, obj):
         lang = translation.get_language()

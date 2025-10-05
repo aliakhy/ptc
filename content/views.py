@@ -2,16 +2,17 @@ from rest_framework import permissions
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from django.utils import translation
 from unicodedata import lookup
 from .serializers import *
 from content.models import Project, Blog
-from celery import Celery
 
 
 class ProjectView(ListModelMixin, RetrieveModelMixin, GenericAPIView):
     queryset = (
-        Project.objects.select_related("category").prefetch_related("gallery").all()
+        Project.objects.select_related("category")
+        .prefetch_related("gallery")
+        .order_by("-created_at")
+        .all()
     )
 
     def get_serializer_class(self):
@@ -28,7 +29,7 @@ class ProjectView(ListModelMixin, RetrieveModelMixin, GenericAPIView):
 
 
 class BlogViewSet(ReadOnlyModelViewSet):
-    queryset = Blog.objects.filter(is_show=True)
+    queryset = Blog.objects.filter(is_show=True).order_by("-created_at").all()
     serializer_class = BlogListSerializer
     lookup_field = "slug"
 
@@ -47,12 +48,16 @@ class CommentViewSet(ModelViewSet):
         return CommentSerializer
 
     def get_queryset(self):
-        return Comment.objects.filter(
-            blog__slug=self.kwargs["blog_slug"], status="published"
+        return (
+            Comment.objects.filter(
+                blog__slug=self.kwargs["blog_slug"], status="published"
+            )
+            .order_by("-created_at")
+            .all()
         )
 
     def get_permissions(self):
-        if self.request.method in [permissions.SAFE_METHODS, "POST"]:
+        if self.request.method in ["GET", "POST"]:
             return [permissions.AllowAny()]
         return [permissions.IsAdminUser()]
 
