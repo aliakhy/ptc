@@ -2,41 +2,37 @@ from rest_framework import permissions
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from unicodedata import lookup
-from .serializers import *
+from content.api.serializers import *
 from content.models import Project, Blog
 
 
-class ProjectView(ListModelMixin, RetrieveModelMixin, GenericAPIView):
+class ProjectViewSet(ReadOnlyModelViewSet):
     queryset = (
         Project.objects.select_related("category")
         .prefetch_related("gallery")
         .order_by("-created_at")
         .all()
     )
-
-    def get_serializer_class(self):
-        if self.kwargs.get("slug"):
-            return ProjectDetailSerializer
-        return ProjectListSerializer
+    serializer_class = ProjectSerializer
 
     lookup_field = "slug"
 
-    def get(self, request, slug=None):
-        if slug:
-            return self.retrieve(request, slug=slug)
-        return self.list(request)
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["list_view"] = self.action == "list"
+        return context
 
 
 class BlogViewSet(ReadOnlyModelViewSet):
     queryset = Blog.objects.filter(is_show=True).order_by("-created_at").all()
-    serializer_class = BlogListSerializer
+    serializer_class = BlogSerializer
     lookup_field = "slug"
 
-    def get_serializer_class(self):
-        if self.kwargs.get("slug"):
-            return BlogDetailSerializer
-        return BlogListSerializer
+    def get_serializer_context(self):
+        if self.action == "list":
+            return {"list_view": True}
+        else:
+            return {"list_view": False}
 
 
 class CommentViewSet(ModelViewSet):

@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from ckeditor_demo import settings
+from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path, include
@@ -28,7 +28,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path("admin/", admin.site.urls),
     path("ckeditor/", include("ckeditor_uploader.urls")),
-    path("", include("content.urls")),  # ✅ این مسیر همه URLهای اپ content رو پوشش میده
+    path("", include("content.api.urls")),
     prefix_default_language=False,
 )
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.utils import translation
-from .models import *
+from content.models import *
 
 
 #   -------->projects
@@ -10,8 +10,9 @@ class GallerySerializer(serializers.ModelSerializer):
         fields = ["image"]
 
 
-class ProjectDetailSerializer(serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     gallery_item = GallerySerializer(many=True, source="gallery")
+    first_image = serializers.SerializerMethodField(source="get_first_image")
 
     class Meta:
         model = Project
@@ -23,36 +24,43 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
             "scale",
             "dimensions",
             "gallery_item",
+            "first_image",
+            "category",
         ]
-
-
-class ProjectListSerializer(serializers.ModelSerializer):
-    first_image = serializers.SerializerMethodField(source="get_first_image")
-
-    class Meta:
-        model = Project
-        fields = ["id", "title", "category", "creation_year", "first_image"]
 
     def get_first_image(self, obj):
         first = obj.gallery.first()
         if first:
-            return f"http://127.0.0.1:8000{first.image.url}"
+            request = self.context.get("request")
+            return request.build_absolute_uri(first.image.url)
         return None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.context.get("list_view", False):
+            allowed = ["id", "title", "category", "creation_year", "first_image"]
+            for field in list(self.fields):
+                if field not in allowed:
+                    self.fields.pop(field)
+        else:
+            self.fields.pop("first_image")
+            self.fields.pop("category")
 
 
 #   _________>blog
 
 
-class BlogDetailSerializer(serializers.ModelSerializer):
+class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ["id", "description", "summary", "body"]
+        fields = ["id", "title", "description", "summary", "body"]
 
-
-class BlogListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Blog
-        fields = ["id", "title", "description", "summary"]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.context.get("list_view"):
+            self.fields.pop("body")
+        else:
+            self.fields.pop("title")
 
 
 class CommentSerializer(serializers.ModelSerializer):
