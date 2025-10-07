@@ -130,3 +130,8 @@ class OrderSerializer(serializers.ModelSerializer):
             "contact_number",
             "explanation",
         ]
+
+class HistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = History
+        fields = ['id','achievement','year']

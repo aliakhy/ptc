@@ -65,3 +65,11 @@ class ApplyAdmin(admin.ModelAdmin):
         "education_degree",
     )
     list_filter = ("first_name", "status", "education_level")
+
+@admin.register(History)
+class HistoryAdmin(TranslationAdmin):
+    list_display = (
+        "id",
+        "year"
+    )
+    list_filter = ("year",)

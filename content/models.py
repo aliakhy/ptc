@@ -173,3 +173,13 @@ class Apply(models.Model):
     class Meta:
         verbose_name = "درخواست همکاری"
         verbose_name_plural = "درخواست‌های همکاری"
+
+
+class History(models.Model):
+    achievement=models.CharField(max_length=100,blank=True,verbose_name="دستاورد")
+    year=models.CharField(max_length=4,verbose_name="سال",validators=[is_digit])
+    created_at = models.DateTimeField(auto_now_add=True,)
+
+    class Meta:
+        verbose_name = "تاریخچه و دستاورد"
+        verbose_name_plural = "تاریخجه و دستاورد ها"

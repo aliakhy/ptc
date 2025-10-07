@@ -1,7 +1,6 @@
 from modeltranslation.translator import register, TranslationOptions
-from rest_framework.views import APIView
 
-from .models import *
+from .models import Blog,Project,History
 
 
 @register(Blog)
@@ -12,3 +11,7 @@ class BlogTranslationOptions(TranslationOptions):
 @register(Project)
 class ProjectTranslationOptions(TranslationOptions):
     fields = ("title", "description")
+
+@register(History)
+class HistoryTranslationOptions(TranslationOptions):
+    fields = ( "achievement",)
