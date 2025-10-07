@@ -8,7 +8,7 @@ router.register("blog", BlogViewSet, basename="blogs")
 comment_router = routers.NestedDefaultRouter(router, "blog", lookup="blog")
 comment_router.register("comments", CommentViewSet, basename="blog-comments")
 router.register("projects", ProjectViewSet, basename="blog-project")
-router.register('history',HistoryViewSet, basename="history")
+router.register("history", HistoryViewSet, basename="history")
 
 urlpatterns = [
     path("", include(router.urls)),

@@ -1,6 +1,6 @@
 from modeltranslation.translator import register, TranslationOptions
 
-from .models import Blog,Project,History
+from .models import Blog, Project, History
 
 
 @register(Blog)
@@ -12,6 +12,7 @@ class BlogTranslationOptions(TranslationOptions):
 class ProjectTranslationOptions(TranslationOptions):
     fields = ("title", "description")
 
+
 @register(History)
 class HistoryTranslationOptions(TranslationOptions):
-    fields = ( "achievement",)
+    fields = ("achievement",)

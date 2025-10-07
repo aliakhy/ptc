@@ -176,9 +176,11 @@ class Apply(models.Model):
 
 
 class History(models.Model):
-    achievement=models.CharField(max_length=100,blank=True,verbose_name="دستاورد")
-    year=models.CharField(max_length=4,verbose_name="سال",validators=[is_digit])
-    created_at = models.DateTimeField(auto_now_add=True,)
+    achievement = models.CharField(max_length=100, blank=True, verbose_name="دستاورد")
+    year = models.CharField(max_length=4, verbose_name="سال", validators=[is_digit])
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
 
     class Meta:
         verbose_name = "تاریخچه و دستاورد"

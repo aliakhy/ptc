@@ -131,7 +131,8 @@ class OrderSerializer(serializers.ModelSerializer):
             "explanation",
         ]
 
+
 class HistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = History
-        fields = ['id','achievement','year']
+        fields = ["id", "achievement", "year"]

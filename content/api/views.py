@@ -3,9 +3,8 @@ from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from content.api.serializers import *
-from content.models import Project, Blog,History
+from content.models import Project, Blog, History
 from rest_framework.response import Response
-
 
 
 class ProjectViewSet(ReadOnlyModelViewSet):
@@ -76,9 +75,13 @@ class ContactView(CreateAPIView):
 class OrderView(CreateAPIView):
     serializer_class = OrderSerializer
 
+
 class HistoryViewSet(ReadOnlyModelViewSet):
     serializer_class = HistorySerializer
     queryset = History.objects.all().order_by("-created_at")
+
     def retrieve(self, request, *args, **kwargs):
-        return Response({'detail': 'Method "Get" not allowed'},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(
+            {"detail": 'Method "Get" not allowed'},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED,
+        )

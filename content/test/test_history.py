@@ -1,12 +1,14 @@
 import pytest
 from content.models import History
 import json
+
+
 def create_history():
     hsitory = History.objects.create(
         achievement_en="test",
         achievement_fa="تست",
         achievement_ar="امتحان",
-        year='1400'
+        year="1400",
     )
     return hsitory
 
